@@ -1,5 +1,7 @@
 package io.github.luizhfquerobin.sbootexp_security.config;
 
+import io.github.luizhfquerobin.sbootexp_security.domain.security.CustomAuthentication;
+import io.github.luizhfquerobin.sbootexp_security.domain.security.IdentificacaoUsuario;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,8 +30,13 @@ public class CustomFilter extends OncePerRequestFilter {
 
         if(secretHeader != null) {
             if (secretHeader.equals("secr3t")) {
-                Authentication authentication = new UsernamePasswordAuthenticationToken(
-                        "Muito secreto", null, List.of(new SimpleGrantedAuthority("ADMIN")));
+                var identificacaoUsuario = new IdentificacaoUsuario(
+                        "id-secret",
+                        "Muito Secreto",
+                        "x-secret",
+                        List.of("USER")
+                );
+                Authentication authentication = new CustomAuthentication(identificacaoUsuario);
 
                 SecurityContext securityContext = SecurityContextHolder.getContext();
                 securityContext.setAuthentication(authentication);
